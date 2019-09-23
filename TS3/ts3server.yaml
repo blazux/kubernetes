@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamspeaktcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: teamspeak
+  labels:
+    app: teamspeak
+spec:
+  ports:
+    - port: 30033
+      targetPort: 30033
+      name: 1-ts
+    - port: 10011
+      targetPort: 10011
+      name: 3-ts
+  loadBalancerIP: 10.180.0.70
+  selector:
+    app: teamspeak
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamspeakudp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: teamspeak
+  labels:
+    app: teamspeak
+spec:
+  ports:
+    - port: 9987
+      targetPort: 9987
+      protocol: UDP
+      name: 2-ts
+  loadBalancerIP: 10.180.0.70
+  selector:
+    app: teamspeak
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim 
+metadata:
+  name: teamspeak
+  namespace: default
+  labels:
+    app: teamspeak 
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: teamspeak
+  labels:
+    app: teamspeak 
+spec:
+  selector:
+    matchLabels:
+      app: teamspeak
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: teamspeak
+    spec:
+      replicas: 3
+      securityContext:
+        runAsUser: 9987
+      containers:
+      - image: teamspeak:latest
+        name: teamspeak
+        env:
+        - name: TS3SERVER_DB_HOST
+          value: "db"
+        - name: TS3SERVER_DB_USER
+          value: "root"
+        - name: TS3SERVER_DB_PASSWORD
+          value: "faudrafaireensecretkey"
+        - name: TS3SERVER_DB_NAME
+          value: "teamspeak"
+        - name: TS3SERVER_DB_WAITUNTILREADY
+          value: "30"
+        - name: TS3SERVER_LICENSE
+          value: "accept"
+        ports:
+        - containerPort: 30033
+        - containerPort: 9987
+          protocol: UDP
+        - containerPort: 10011
+        livenessProbe:
+          tcpSocket:
+            port: 30033
+          initialDelaySeconds: 5
+          periodSeconds: 2
+        volumeMounts:
+        - name: ts-ini
+          mountPath: /var/ts3server/
+      volumes:
+      - name: ts-ini
+        persistentVolumeClaim:
+          claimName: teamspeak

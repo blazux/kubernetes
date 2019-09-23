@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamspeaktcp
+  annotations: 
+    metallb.universe.tf/allow-shared-ip: teamspeak
+  labels:
+    app: teamspeak
+spec:
+  ports:
+    - port: 30033
+      targetPort: 30033
+      name: 1-ts
+    - port: 10011
+      targetPort: 10011
+      name: 3-ts
+  loadBalancerIP: 10.180.0.70
+  selector:
+    app: teamspeak
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamspeakudp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: teamspeak
+  labels:
+    app: teamspeak
+spec:
+  ports:
+    - port: 9987
+      targetPort: 9987
+      protocol: UDP
+      name: 2-ts
+  loadBalancerIP: 10.180.0.70
+  selector:
+    app: teamspeak
+  type: LoadBalancer
