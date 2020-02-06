@@ -50,6 +50,10 @@ spec:
         volumeMounts:
         - name: site-grav
           mountPath: /usr/share/nginx/html/user
+        command:
+        - chown
+        - "www-data:www-data"
+        - "/usr/share/nginx/html/cache/gpm"
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
