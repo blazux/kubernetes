@@ -10,7 +10,7 @@ If you have a brand new and empty Kubernetes cluster, start with them !
 
 Almost everything is made from docker image :
 * TS3 contains everything needed to setup a Teamspeak 3 server inside Kubernetes : nobody asked for it but here it is anyway !
-* Grav is the well known flat file CMS. It's based on the awesome itherz docker image, all credit does to him.
+* Grav is the well known flat file CMS. It's based on the awesome itherz docker image, all credit does to them.
 * Mailu is just a tweak of the official Kubernetes configuration to make it lighter.
 
 Enjoy !
