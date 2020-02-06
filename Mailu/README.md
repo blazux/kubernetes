@@ -12,7 +12,7 @@ Here is the list of modification :
 
 Most of the configuration is done in the configmap :
  * Adapt your domain name and app name
- * Adapt the POD network to match your CNI configuration (you will safe IMAP and SMTP authentication problem if you don't)
+ * Adapt the POD network to match your CNI configuration (you will face IMAP and SMTP authentication problems if you don't)
  * Adapt the ingress with your own cluster issuer name, change the domain name here as well
 
 Enjoy !
