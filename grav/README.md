@@ -2,7 +2,7 @@
 
 It's based on the awesone [itherz image](https://hub.docker.com/r/itherz/grav)
 
-One problem with it is that most of the file needed are embedded inside the image file system so :
+One problem with it is that most of the files needed are embedded inside the image file system so :
  * deployment will initiate a container who will copy all file needed on the pv (this can be very very long)
  * then start the real container which will bind the pv in the right folder with all needed files
 
